@@ -1,6 +1,7 @@
 import matplotlib.animation as animation
 import matplotlib.pyplot as plt
 import time
+from random import randrange
 import random
 import numpy as np
 
@@ -117,8 +118,9 @@ algoType = int(input("Which sorting method you want?\n1.Quick\n2.Merge\n3.Select
 num = int(input("Enter the number of random integers in the list: "))
 
 # Build and randomly shuffle list of integers.
-array = np.random.randint(100, size=100)
+array = [x + 1 for x in range(num)]
 random.seed(time.time())
+random.shuffle(array)
 if algoType == 1:
     topBar = "Quick Sort on Average: O(nlog(n))"
     generator = quicksort(array, 0, num - 1)
