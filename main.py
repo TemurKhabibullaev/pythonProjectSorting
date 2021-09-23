@@ -1,4 +1,9 @@
-# # Best O(n`2) / Worst O(n`2)
+import matplotlib.animation as animation
+import matplotlib.pyplot as plt
+import time
+import random
+
+# Best O(n`2) / Worst O(n`2)
 def selectionSort(array):
     first = 0
     last = len(array)
@@ -67,3 +72,4 @@ def quicksort(A, lef, rig):
 
 def radixSort(array):
     return array
+
