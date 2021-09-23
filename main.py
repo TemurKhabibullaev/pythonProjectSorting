@@ -2,7 +2,7 @@ import matplotlib.animation as animation
 import matplotlib.pyplot as plt
 import time
 import random
-
+import numpy as np
 
 # Sorting Algos:
 def selectionsort(array):
@@ -113,25 +113,22 @@ def bubblesort(array):
 
 
 # User's input:
-method = int(input("Which sorting method you want?\n1.Quick\n2.Merge\n3.Selection\n4.Insertion\n5.Bubble\n"))
+algoType = int(input("Which sorting method you want?\n1.Quick\n2.Merge\n3.Selection\n4.Insertion\n5.Bubble\n"))
 num = int(input("Enter the number of random integers in the list: "))
 
 # Build and randomly shuffle list of integers.
-array = [x + 1 for x in range(num)]
+array = np.random.randint(100, size=100)
 random.seed(time.time())
-random.shuffle(array)
-
-# Get appropriate generator to supply to matplotlib FuncAnimation method.
-if method == 1:
+if algoType == 1:
     topBar = "Quick Sort on Average: O(nlog(n))"
     generator = quicksort(array, 0, num - 1)
-elif method == 2:
+elif algoType == 2:
     topBar = "Merge Sort on Average: O(nlog(n))"
     generator = mergesort(array, 0, num - 1)
-elif method == 3:
+elif algoType == 3:
     topBar = "Selection Sort on Average: O(n`2)"
     generator = selectionsort(array)
-elif method == 4:
+elif algoType == 4:
     topBar = "Insertion Sort on Average: O(n`2)"
     generator = insertionsort(array)
 else:
@@ -181,3 +178,4 @@ anim = animation.FuncAnimation(fig, func=update_fig,
                                fargs=(bar_rects, iteration), frames=generator, interval=1,
                                repeat=False)
 plt.show()
+
