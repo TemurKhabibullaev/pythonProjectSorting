@@ -3,73 +3,181 @@ import matplotlib.pyplot as plt
 import time
 import random
 
-# Best O(n`2) / Worst O(n`2)
-def selectionSort(array):
-    first = 0
-    last = len(array)
-    while first < len(array) - 1:
-        for i in range(first+1, last):
-            if array[first+1] < array[first]:
-                array[first], array[first+1] = array[first+1], array[first]
-                first += 1
-            else:
-                last += 1
-    return array
 
-
-# Best O(n) / Worst O(n`2)
-def insertionSort(array):
-    for i in range(1, len(array)):
-        a = i
-        while a > 0 and array[a] < array[a - 1]:
-            array[a-1], array[a] = array[a], array[a-1]
-            a -= 1
-    return array
-
-
-# Best O(n) / Worst O(n`2)
-def bubbleSort(array):
-    locker = 0
-    swap = False
-    while swap is False:
-        swap = True
-        for i in range(len(array)-1-locker):
-            if array[i] > array[i + 1]:
-                array[i+1], array[i] = array[i], array[i+1]
-                swap = False
-        locker += 1
-    return array
-
-
-# Best O(nlog(n)) / Worst O(nlog(n))
-
-def heapSort(array):
-    return array
-
-def swap(A, i, j):
-    if i != j:
-        A[i], A[j] = A[j], A[i]
-
-
-def quicksort(A, lef, rig):
-    if lef >= rig:
+# Sorting Algos:
+def selectionsort(array):
+    if len(array) == 1:
         return
 
-    pivot = A[rig]
-    pivotIdx = lef
+    for i in range(len(array)):
+        minVal = array[i]
+        minIdx = i
+        for j in range(i, len(array)):
+            if array[j] < minVal:
+                minVal = array[j]
+                minIdx = j
+            yield array
+        if i != minIdx:
+            array[i], array[minIdx] = array[minIdx], array[i]
+        yield array
 
-    for i in range(lef, rig):
-        if A[i] < pivot:
-            swap(A, i, pivotIdx)
+
+def insertionsort(array):
+
+    for i in range(1, len(array)):
+        j = i
+        while j > 0 and array[j] < array[j - 1]:
+            if j != j-1:
+                array[j], array[j - 1] = array[j - 1], array[j]
+            j -= 1
+            yield array
+
+
+def merge(array, start, mid, end):
+
+    merged = []
+    leftIdx = start
+    rightIdx = mid + 1
+
+    while leftIdx <= mid and rightIdx <= end:
+        if array[leftIdx] < array[rightIdx]:
+            merged.append(array[leftIdx])
+            leftIdx += 1
+        else:
+            merged.append(array[rightIdx])
+            rightIdx += 1
+
+    while leftIdx <= mid:
+        merged.append(array[leftIdx])
+        leftIdx += 1
+
+    while rightIdx <= end:
+        merged.append(array[rightIdx])
+        rightIdx += 1
+
+    for i, sorted_val in enumerate(merged):
+        array[start + i] = sorted_val
+        yield array
+
+
+def mergesort(array, start, end):
+
+    if end <= start:
+        return
+
+    mid = start + ((end - start + 1) // 2) - 1
+    yield from mergesort(array, start, mid)
+    yield from mergesort(array, mid + 1, end)
+    yield from merge(array, start, mid, end)
+    yield array
+
+
+def quicksort(array, start, end):
+
+    if start >= end:
+        return
+
+    pivot = array[end]
+    pivotIdx = start
+
+    for i in range(start, end):
+        if array[i] < pivot:
+            if i != pivotIdx:
+                array[i], array[pivotIdx] = array[pivotIdx], array[i]
             pivotIdx += 1
-        yield A
-    swap(A, rig, pivotIdx)
-    yield A
+        yield array
+    if end != pivotIdx:
+        array[end], array[pivotIdx] = array[pivotIdx], array[end]
+    yield array
 
-    yield from quicksort(A, lef, pivotIdx - 1)
-    yield from quicksort(A, pivotIdx + 1, rig)
+    yield from quicksort(array, start, pivotIdx - 1)
+    yield from quicksort(array, pivotIdx + 1, end)
 
 
-def radixSort(array):
-    return array
+def bubblesort(array):
 
+    if len(array) == 1:
+        return
+
+    swapped = True
+    for i in range(len(array) - 1):
+        if not swapped:
+            break
+        swapped = False
+        for j in range(len(array) - 1 - i):
+            if array[j] > array[j + 1]:
+                if j != j + 1:
+                    array[j], array[j + 1] = array[j + 1], array[j]
+                swapped = True
+            yield array
+
+
+# User's input:
+method = int(input("Which sorting method you want?\n1.Quick\n2.Merge\n3.Selection\n4.Insertion\n5.Bubble\n"))
+num = int(input("Enter the number of random integers in the list: "))
+
+# Build and randomly shuffle list of integers.
+array = [x + 1 for x in range(num)]
+random.seed(time.time())
+random.shuffle(array)
+
+# Get appropriate generator to supply to matplotlib FuncAnimation method.
+if method == 1:
+    topBar = "Quick Sort on Average: O(nlog(n))"
+    generator = quicksort(array, 0, num - 1)
+elif method == 2:
+    topBar = "Merge Sort on Average: O(nlog(n))"
+    generator = mergesort(array, 0, num - 1)
+elif method == 3:
+    topBar = "Selection Sort on Average: O(n`2)"
+    generator = selectionsort(array)
+elif method == 4:
+    topBar = "Insertion Sort on Average: O(n`2)"
+    generator = insertionsort(array)
+else:
+    topBar = "Bubble Sort on Average: O(n`2)"
+    generator = bubblesort(array)
+
+# Initialize figure and axis.
+fig, ax = plt.subplots()
+ax.set_title(topBar)
+
+# Initialize a bar plot. Note that matplotlib.pyplot.bar() returns a
+# list of rectangles (with each bar in the bar plot corresponding
+# to one rectangle), which we store in bar_rects.
+bar_rects = ax.bar(range(len(array)), array, align="edge")
+
+# Set axis limits. Set y axis upper limit high enough that the tops of
+# the bars won't overlap with the text label.
+ax.set_xlim(0, num)
+ax.set_ylim(0, int(1.07 * num))
+
+# Place a text label in the upper-left corner of the plot to display
+# number of operations performed by the sorting algorithm (each "yield"
+# is treated as 1 operation).
+text = ax.text(0.02, 0.95, "", transform=ax.transAxes)
+
+# Define function update_fig() for use with matplotlib.pyplot.FuncAnimation().
+# To track the number of operations, i.e., iterations through which the
+# animation has gone, define a variable "iteration". This variable will
+# be passed to update_fig() to update the text label, and will also be
+# incremented in update_fig(). For this increment to be reflected outside
+# the function, we make "iteration" a list of 1 element, since lists (and
+# other mutable objects) are passed by reference (but an integer would be
+# passed by value).
+# NOTE: Alternatively, iteration could be re-declared within update_fig()
+# with the "global" keyword (or "nonlocal" keyword).
+iteration = [0]
+
+
+def update_fig(A, rects, iteration):
+    for rect, val in zip(rects, A):
+        rect.set_height(val)
+    iteration[0] += 1
+    text.set_text("It took {} operations to complete".format(iteration[0]))
+
+
+anim = animation.FuncAnimation(fig, func=update_fig,
+                               fargs=(bar_rects, iteration), frames=generator, interval=1,
+                               repeat=False)
+plt.show()
