@@ -37,8 +37,33 @@ def bubbleSort(array):
 
 
 # Best O(nlog(n)) / Worst O(nlog(n))
-def heapSort(array):
 
-def quickSort(array):
+def heapSort(array):
+    return array
+
+def swap(A, i, j):
+    if i != j:
+        A[i], A[j] = A[j], A[i]
+
+
+def quicksort(A, lef, rig):
+    if lef >= rig:
+        return
+
+    pivot = A[rig]
+    pivotIdx = lef
+
+    for i in range(lef, rig):
+        if A[i] < pivot:
+            swap(A, i, pivotIdx)
+            pivotIdx += 1
+        yield A
+    swap(A, rig, pivotIdx)
+    yield A
+
+    yield from quicksort(A, lef, pivotIdx - 1)
+    yield from quicksort(A, pivotIdx + 1, rig)
+
 
 def radixSort(array):
+    return array
