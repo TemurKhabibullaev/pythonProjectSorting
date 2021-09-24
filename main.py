@@ -151,7 +151,6 @@ def updateFrames(array, rects, iteration, t0):
     text.set_text(f"It took {iteration[0]} operations and {round(time.time()-t0)} seconds to complete")
 
 
-
 performer = animation.FuncAnimation(fig, func=updateFrames, fargs=(barRectangles, iteration, t0), frames=generator, interval=1,
                                     repeat=False)
 
