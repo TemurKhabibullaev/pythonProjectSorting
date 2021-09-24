@@ -129,8 +129,10 @@ else:
 # Create the full figure + axis
 fig, ax = plt.subplots()
 ax.set_title(topBar)
+plt.setp(ax.spines.values(), color='black')
 # bar plot
-barRectangles = ax.bar(range(len(arrayRan)), arrayRan, align="edge")
+barRectangles = ax.bar(range(len(arrayRan)), arrayRan, align="edge", color='black')
+
 # initializing x and y limits
 ax.set_xlim(0, num)
 ax.set_ylim(0, int(1.07 * num))
@@ -139,20 +141,19 @@ text = ax.text(0.02, 0.95, "", transform=ax.transAxes)
 # This function is basically a frame refresher
 iteration = [0]
 
-
+t0 = time.time()
 # Frame updater
-def updateFrames(array, rects, iteration):
+def updateFrames(array, rects, iteration, t0):
 
     for rect, val in zip(rects, array):
         rect.set_height(val)
     iteration[0] += 1
-    text.set_text(f"It took {iteration[0]} operations to complete")
+    text.set_text(f"It took {iteration[0]} operations and {round(time.time()-t0)} seconds to complete")
 
 
-t0 = time.time()
-performer = animation.FuncAnimation(fig, func=updateFrames, fargs=(barRectangles, iteration), frames=generator, interval=1,
+
+performer = animation.FuncAnimation(fig, func=updateFrames, fargs=(barRectangles, iteration, t0), frames=generator, interval=1,
                                     repeat=False)
 
 plt.show()
-t1 = time.time()
-print(round(t1-t0))
+
