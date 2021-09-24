@@ -89,23 +89,22 @@ def quicksort(array, start, end):
 def bubblesort(array):
     if len(array) == 1:
         return
-    swapped = True
+    swap = True
     for i in range(len(array) - 1):
-        if not swapped:
+        if not swap:
             break
-        swapped = False
+        swap = False
         for j in range(len(array) - 1 - i):
             if array[j] > array[j + 1]:
                 if j != j + 1:
                     array[j], array[j + 1] = array[j + 1], array[j]
-                swapped = True
+                swap = True
             yield array
 
 
 # User's input:
 algoType = int(input("Which sorting method you want?\n1.Quick\n2.Merge\n3.Selection\n4.Insertion\n5.Bubble\n"))
 num = int(input("Enter the number of random integers and the max number in the list: "))
-
 # random integers in a list.
 arrayRan = [x + 1 for x in range(num)]
 random.seed(time.time())
@@ -132,7 +131,6 @@ ax.set_title(topBar)
 plt.setp(ax.spines.values(), color='black')
 # bar plot
 barRectangles = ax.bar(range(len(arrayRan)), arrayRan, align="edge", color='black')
-
 # initializing x and y limits
 ax.set_xlim(0, num)
 ax.set_ylim(0, int(1.07 * num))
@@ -140,19 +138,19 @@ ax.set_ylim(0, int(1.07 * num))
 text = ax.text(0.02, 0.95, "", transform=ax.transAxes)
 # This function is basically a frame refresher
 iteration = [0]
-
 t0 = time.time()
 # Frame updater
-def updateFrames(array, rects, iteration, t0):
 
-    for rect, val in zip(rects, array):
-        rect.set_height(val)
+
+def updateFrames(array, rectangles, iteration, t0):
+
+    for rectangle, val in zip(rectangles, array):
+        rectangle.set_height(val)
     iteration[0] += 1
-    text.set_text(f"It took {iteration[0]} operations and {round(time.time()-t0)} seconds to complete")
+    text.set_text(f"{iteration[0]} Operations | {round(time.time()-t0)} Seconds")
 
 
 performer = animation.FuncAnimation(fig, func=updateFrames, fargs=(barRectangles, iteration, t0), frames=generator, interval=1,
                                     repeat=False)
-
 plt.show()
 
