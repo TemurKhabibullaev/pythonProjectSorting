@@ -142,13 +142,17 @@ iteration = [0]
 
 # Frame updater
 def updateFrames(array, rects, iteration):
+
     for rect, val in zip(rects, array):
         rect.set_height(val)
     iteration[0] += 1
-    text.set_text("It took {} operations to complete".format(iteration[0]))
+    text.set_text(f"It took {iteration[0]} operations to complete")
 
 
+t0 = time.time()
 performer = animation.FuncAnimation(fig, func=updateFrames, fargs=(barRectangles, iteration), frames=generator, interval=1,
                                     repeat=False)
-plt.show()
 
+plt.show()
+t1 = time.time()
+print(round(t1-t0))
