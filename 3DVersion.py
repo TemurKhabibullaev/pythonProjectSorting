@@ -2,6 +2,7 @@ import matplotlib.pyplot as plt
 import time, random
 import numpy as np
 from matplotlib.animation import FuncAnimation
+from random import randint
 
 
 # Selection Sort
@@ -105,6 +106,9 @@ def bubblesort(array):
 # User's input:
 sortingAlgorithmsChoice = int(input("Which sorting method you want?\n1.Quick\n2.Merge\n3.Selection\n4.Insertion\n5.Bubble\n"))
 numberOfRandomIntegers = int(input("Enter the number of random integers and the max number in the list: "))
+colorbar = []
+for i in range(numberOfRandomIntegers):        # takes number of integers x and appends x colors into the list
+    colorbar.append('#%06X' % randint(0, 0xFFFFFF))
 # random integers in a list.
 arrayOfRandom = [x + 1 for x in range(numberOfRandomIntegers)]
 random.seed(time.time())
@@ -147,12 +151,11 @@ def plot3D(numbers, array, generator, topBar):
     text = ax.text2D(0.1, 0.95, "", horizontalalignment='center', verticalalignment='center', transform=ax.transAxes, color="grey")
     iteration, startTime = [0], time.time()
     # frame refresher & updater
-    randomColor = np.random.choice(colors)
 
     def frames(A, rects, iteration, t0):
         ax.collections.clear()
 
-        ax.bar3d(range(len(array)), A, z, dx, dy, dz, color=randomColor, shade=True)
+        ax.bar3d(range(len(array)), A, z, dx, dy, dz, color=colorbar, shade=True)
         iteration[0] += 1
         text.set_text(f"{iteration[0]} Operations | {round(time.time()-t0)} Seconds")
 
