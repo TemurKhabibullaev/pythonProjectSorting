@@ -3,6 +3,8 @@ import time, random
 import numpy as np
 from matplotlib.animation import FuncAnimation
 from random import randint
+import tkinter as tk
+from tkinter import simpledialog
 
 
 # Selection Sort
@@ -104,8 +106,10 @@ def bubblesort(array):
 
 
 # User's input:
-sortingAlgorithmsChoice = int(input("Which sorting method you want?\n1.Quick\n2.Merge\n3.Selection\n4.Insertion\n5.Bubble\n"))
-numberOfRandomIntegers = int(input("Enter the number of random integers and the max number in the list: "))
+window = tk.Tk()
+window.withdraw()
+sortingAlgorithmsChoice = simpledialog.askinteger(title="Sorting Algorithms, Visualized", prompt="Which sorting method you want?\n1.Quick\n2.Merge\n3.Selection\n4.Insertion\n5.Bubble\n")
+numberOfRandomIntegers = simpledialog.askinteger(title="Numbers in array", prompt="Enter how many random numbers you want:")
 colorbar = []
 for i in range(numberOfRandomIntegers):        # takes number of integers x and appends x colors into the list
     colorbar.append('#%06X' % randint(0, 0xFFFFFF))
